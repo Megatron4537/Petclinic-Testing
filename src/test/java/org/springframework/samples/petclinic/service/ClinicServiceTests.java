@@ -94,6 +94,12 @@ public class ClinicServiceTests {
     }
 
     @Test
+    public void shouldFindOwnerById() {
+        Owner owner = this.owners.findById(1);
+        assertThat(owner).isNotNull();
+    }
+
+    @Test
     public void shouldFindSingleOwnerWithPet() {
         Owner owner = this.owners.findById(1);
         assertThat(owner.getLastName()).startsWith("Franklin");
