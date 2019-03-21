@@ -51,6 +51,8 @@ public class PetControllerTests {
     @MockBean
     private OwnerRepository owners;
 
+    private Owner george;
+
     @Before
     public void setup() {
         PetType cat = new PetType();
@@ -60,6 +62,14 @@ public class PetControllerTests {
         given(this.owners.findById(TEST_OWNER_ID)).willReturn(new Owner());
         given(this.pets.findById(TEST_PET_ID)).willReturn(new Pet());
 
+        george = new Owner();
+        george.setId(TEST_OWNER_ID);
+        george.setFirstName("George");
+        george.setLastName("Franklin");
+        george.setAddress("110 W. Liberty St.");
+        george.setCity("Madison");
+        george.setTelephone("6085551023");
+        given(this.owners.findById(TEST_OWNER_ID)).willReturn(george);
     }
 
     @Test
@@ -125,5 +135,4 @@ public class PetControllerTests {
             .andExpect(status().isOk())
             .andExpect(view().name("pets/createOrUpdatePetForm"));
     }
-
 }

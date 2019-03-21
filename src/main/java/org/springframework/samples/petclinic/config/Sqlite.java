@@ -2,17 +2,18 @@ package org.springframework.samples.petclinic.config;
 
 import org.springframework.core.io.ClassPathResource;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.DriverManager;
-import java.sql.Statement;
-import java.sql.ResultSet;
+import java.sql.*;
+import java.util.ArrayList;
+
 import org.springframework.jdbc.datasource.init.ScriptUtils;
+import org.springframework.samples.petclinic.owner.Owner;
+import org.springframework.samples.petclinic.vet.Vet;
+import org.springframework.samples.petclinic.vet.Vets;
 
 
 public class Sqlite{
 
-    private static final String url = "jdbc:sqlite::newDb.db";
+    private static final String url = "jdbc:sqlite:newDb.db";
     private static final String schemaPath = "db/sqlite/schema.sql";
     private static final String dataPath = "db/sqlite/data.sql";
 
@@ -25,9 +26,11 @@ public class Sqlite{
 
             try {
 
+                System.out.println("------ GET CONNECTION ------");
                 conn = DriverManager.getConnection(url);
 
                 ScriptUtils.executeSqlScript(conn,new ClassPathResource(schemaPath));
+                System.out.println("------ LOADING DATA INTO DB ------");
                 ScriptUtils.executeSqlScript(conn,new ClassPathResource(dataPath));
 
             } catch (SQLException e) {
@@ -72,5 +75,67 @@ public class Sqlite{
             }
         }
         return result;
+    }
+
+    public static Owner findOwnerById(int ownerId){
+        Connection conn = null;
+        Owner owner = new Owner();
+        String query = "SELECT * FROM owners WHERE id = ?";
+        try {
+            conn = DriverManager.getConnection(url);
+            Statement state = conn.createStatement();
+            PreparedStatement pstmt  = conn.prepareStatement(query);
+            pstmt.setInt(1, ownerId);
+            ResultSet rs = pstmt.executeQuery();
+
+            while(rs.next()) {
+                owner.setId(rs.getInt("id"));
+                owner.setFirstName(rs.getString("first_name"));
+                owner.setLastName(rs.getString("last_name"));
+                owner.setCity(rs.getString("city"));
+                owner.setAddress(rs.getString("address"));
+                owner.setTelephone(rs.getString("telephone"));
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e);
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                System.out.println(e);
+            }
+        }
+        return owner;
+    }
+
+    public static Vets getVets(){
+        Connection conn = null;
+        Vets vets = new Vets();
+        String query = "SELECT * FROM vets";
+        try {
+            conn = DriverManager.getConnection(url);
+            Statement state = conn.createStatement();
+            ResultSet rs = state.executeQuery(query);
+            Vet vet;
+
+            while(rs.next()) {
+                vet.
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e);
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                System.out.println(e);
+            }
+        }
+        return vets;
     }
 }
