@@ -111,7 +111,11 @@ public class Sqlite{
         return owner;
     }
 
-    public static Vets getVets(){
+    public static ArrayList<Owner> findByLastName(String lastName) {
+        return null;
+    }
+
+    /*public static Vets getVets(){
         Connection conn = null;
         Vets vets = new Vets();
         String query = "SELECT * FROM vets";
@@ -137,5 +141,5 @@ public class Sqlite{
             }
         }
         return vets;
-    }
+    }*/
 }
