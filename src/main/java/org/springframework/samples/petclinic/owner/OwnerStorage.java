@@ -35,7 +35,7 @@ public class OwnerStorage {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    ArrayList<Owner> actualOwners = Sqlite.findByLastName(lastName);
+                    Collection<Owner> actualOwners = Sqlite.findByLastName(lastName);
                     //Consistency check stuff between expected and actual
                 }
             }).start();
@@ -63,9 +63,25 @@ public class OwnerStorage {
     }
     
     public Owner findById(Integer ownerId) {
+        System.out.println("Shadow Read findById");
+        if(DatabaseToggles.isEnableOldDb && DatabaseToggles.isEnableNewDb) {
+            Owner expectedOwner = ownerRepository.findById(ownerId);
 
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Owner actualOwner = Sqlite.findOwnerById(ownerId);
+                    //Consistency check stuff between expected and actual
+                }
+            }).start();
+        }
 
-        return null;
+        // If old database is enabled, return old values.
+        if(DatabaseToggles.isEnableOldDb) {
+            return ownerRepository.findById(ownerId);
+        }
+
+        return Sqlite.findOwnerById(ownerId);
     }
 
     public void save(Owner owner) {
