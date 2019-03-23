@@ -6,6 +6,8 @@ import org.springframework.samples.petclinic.system.DatabaseToggles;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import org.springframework.samples.petclinic.model.BaseEntity;
 
 public class OwnerStorage {
 
@@ -57,9 +59,33 @@ public class OwnerStorage {
         int inconsistencies = 0;
         
         for(Owner owner : ownerRepository.findAll()) {
-            System.out.println(owner);
+            
+            Owner expectedOwner = ownerRepository.findById(owner.getId());
+            Owner actualOwner = Sqlite.findOwnerById(expectedOwner.getId());
+            System.out.println("Comparing expected owner: " + expectedOwner.getFirstName() + " " + 
+                    expectedOwner.getLastName() + " with actual owner: " + 
+                    actualOwner.getFirstName() + actualOwner.getLastName());
+            if(!expectedOwner.sameOwner(actualOwner)) {
+                //increment number of inconsistencies
+                inconsistencies++;
+                
+                //print it
+                printViolation(owner, actualOwner, expectedOwner);
+                
+                //update if not consistent
+                //TODO: Implement save function 
+                //Sqlite.save(expectedOwner);
+            }
         }
+        
         return inconsistencies;
+    }
+    
+    public void printViolation(Owner owner, Owner actualOwner, Owner expectedOwner) {
+        System.out.println("Consistency Violation. Expected: " + 
+                expectedOwner.getFirstName() + " " + expectedOwner.getLastName() + " with ID: " + expectedOwner.getId() +
+                ", but got: " + actualOwner.getFirstName() + actualOwner.getLastName() + " with ID: " + actualOwner.getId()
+        );
     }
     
     public Owner findById(Integer ownerId) {
@@ -86,8 +112,22 @@ public class OwnerStorage {
 
     public void save(Owner owner) {
         ownerRepository.save(owner);
-        consistencyCheck();
-        //add the shadow writes here like if(oldDB) then oldDb.save()...
         
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                consistencyCheck();
+            }
+        });
+        //add the shadow writes here like if(oldDB) then oldDb.save()...
+       
     }
+    
+    public List<Owner> getCopyNewDb() {
+        if(DatabaseToggles.isEnableNewDb) {
+            
+        }
+        return null;
+    }
+    
 }

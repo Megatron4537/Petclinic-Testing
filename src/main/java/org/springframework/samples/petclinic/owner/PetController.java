@@ -39,7 +39,7 @@ class PetController {
     private final PetRepository pets;
     private final OwnerRepository owners;
     private ShadowOwner shadowOwner = new ShadowOwner();
-    private ConsistencyChecker checker = new ConsistencyChecker();
+    //private ConsistencyChecker checker = new ConsistencyChecker();
 
     public PetController(PetRepository pets, OwnerRepository owners) {
         this.pets = pets;
@@ -53,7 +53,7 @@ class PetController {
 
     @ModelAttribute("owner")
     public Owner findOwner(@PathVariable("ownerId") int ownerId) {
-        checker.compareOwners(shadowOwner.findById(ownerId), this.owners.findById(ownerId));
+        //checker.compareOwners(shadowOwner.findById(ownerId), this.owners.findById(ownerId));
         return this.owners.findById(ownerId);
     }
 
