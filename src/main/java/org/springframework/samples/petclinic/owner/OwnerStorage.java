@@ -49,6 +49,19 @@ public class OwnerStorage {
         return Sqlite.findByLastName(lastName);
     }
 
+    public int consistencyCheck() {
+        if(!(DatabaseToggles.isEnableNewDb && DatabaseToggles.isEnableOldDb)) {
+            return 0; //return 0 since were not trying to migrate the data
+        }
+        
+        int inconsistencies = 0;
+        
+        for(Owner owner : ownerRepository.findAll()) {
+            System.out.println(owner);
+        }
+        return inconsistencies;
+    }
+    
     public Owner findById(Integer ownerId) {
 
 
@@ -56,6 +69,9 @@ public class OwnerStorage {
     }
 
     public void save(Owner owner) {
-
+        ownerRepository.save(owner);
+        consistencyCheck();
+        //add the shadow writes here like if(oldDB) then oldDb.save()...
+        
     }
 }

@@ -40,10 +40,11 @@ class OwnerController {
 
     private static final String VIEWS_OWNER_CREATE_OR_UPDATE_FORM = "owners/createOrUpdateOwnerForm";
     private final OwnerRepository owners;
-
+    private final OwnerStorage ownerStorage;
 
     public OwnerController(OwnerRepository clinicService) {
         this.owners = clinicService;
+        ownerStorage = new OwnerStorage(clinicService);
     }
 
     @InitBinder
@@ -63,7 +64,7 @@ class OwnerController {
         if (result.hasErrors()) {
             return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
         } else {
-            this.owners.save(owner);
+            this.ownerStorage.save(owner);
             return "redirect:/owners/" + owner.getId();
         }
     }
