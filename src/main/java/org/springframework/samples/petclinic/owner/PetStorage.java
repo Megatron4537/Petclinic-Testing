@@ -1,23 +1,21 @@
 package org.springframework.samples.petclinic.owner;
 
-import org.hibernate.dialect.Database;
 import org.springframework.samples.petclinic.config.Sqlite;
 import org.springframework.samples.petclinic.system.DatabaseToggles;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
-public class OwnerStorage {
+public class PetStorage {
 
-    OwnerRepository ownerRepository;
+    PetRepository petRepository;
 
-    public OwnerStorage(OwnerRepository ownerRepository) {
+    public PetStorage(PetRepository petRepository) {
         if(DatabaseToggles.isEnableNewDb) {
             System.out.println("New DB is running");
         }
 
         if(DatabaseToggles.isEnableOldDb) {
-            this.ownerRepository = ownerRepository;
+            this.petRepository = petRepository;
             System.out.println("Old Database is running");
         }
 
@@ -26,16 +24,15 @@ public class OwnerStorage {
         }
     }
 
-
-    public Collection<Owner> findByLastName(String lastName) {
-        System.out.println("Shadow Read findByLastName");
+    public List<PetType> findPetTypes() {
+        System.out.println("Shadow Read findPetTypes");
         if(DatabaseToggles.isEnableOldDb && DatabaseToggles.isEnableNewDb) {
-            Collection<Owner> expectedOwners = ownerRepository.findByLastName(lastName);
+            List<PetType> expectedTypes = petRepository.findPetTypes();
 
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    Collection<Owner> actualOwners = Sqlite.findByLastName(lastName);
+                    List<PetType> actualTypes = Sqlite.findPetTypes();
                     //Consistency check stuff between expected and actual
                 }
             }).start();
@@ -43,21 +40,21 @@ public class OwnerStorage {
 
         // If old database is enabled, return old values.
         if(DatabaseToggles.isEnableOldDb) {
-            return ownerRepository.findByLastName(lastName);
+            return petRepository.findPetTypes();
         }
 
-        return Sqlite.findByLastName(lastName);
+        return Sqlite.findPetTypes();
     }
 
-    public Owner findById(Integer ownerId) {
+    public Pet findById(Integer petId) {
         System.out.println("Shadow Read findById");
         if(DatabaseToggles.isEnableOldDb && DatabaseToggles.isEnableNewDb) {
-            Owner expectedOwner = ownerRepository.findById(ownerId);
+            Pet expectedPet = petRepository.findById(petId);
 
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    Owner actualOwner = Sqlite.findOwnerById(ownerId);
+                    Pet actualPet = Sqlite.findPetById(petId);
                     //Consistency check stuff between expected and actual
                 }
             }).start();
@@ -65,13 +62,13 @@ public class OwnerStorage {
 
         // If old database is enabled, return old values.
         if(DatabaseToggles.isEnableOldDb) {
-            return ownerRepository.findById(ownerId);
+            return petRepository.findById(petId);
         }
 
-        return Sqlite.findOwnerById(ownerId);
+        return Sqlite.findPetById(petId);
     }
 
-    public void save(Owner owner) {
+    public void save(Pet pet) {
 
     }
 }

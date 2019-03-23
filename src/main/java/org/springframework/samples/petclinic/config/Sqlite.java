@@ -4,11 +4,16 @@ import org.springframework.core.io.ClassPathResource;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.samples.petclinic.owner.Owner;
+import org.springframework.samples.petclinic.owner.Pet;
+import org.springframework.samples.petclinic.owner.PetType;
 import org.springframework.samples.petclinic.vet.Vet;
 import org.springframework.samples.petclinic.vet.Vets;
+import org.springframework.samples.petclinic.visit.Visit;
 
 
 public class Sqlite{
@@ -111,7 +116,23 @@ public class Sqlite{
         return owner;
     }
 
-    public static ArrayList<Owner> findByLastName(String lastName) {
+    public static Collection<Owner> findByLastName(String lastName) {
+        return null;
+    }
+
+    public static List<PetType> findPetTypes() {
+        return null;
+    }
+
+    public static Pet findPetById(Integer id) {
+        return null;
+    }
+
+    public static Collection<Vet> findAllVets() {
+        return null;
+    }
+
+    public static List<Visit> findVisitsByPetId(Integer id) {
         return null;
     }
 
