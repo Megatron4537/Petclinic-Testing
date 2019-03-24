@@ -110,20 +110,23 @@ public class OwnerStorage {
         return Sqlite.findOwnerById(ownerId);
     }
 
+    /**
+     * Shadow write Owner to old and new datastore
+     * @param owner
+     */
     public void save(Owner owner) {
-
         if(DatabaseToggles.isEnableOldDb) {
             ownerRepository.save(owner);
         }
-        
-        //add the shadow writes here like if(oldDB) then oldDb.save()...
-        
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                consistencyCheck();
-            }
-        });
-               
+
+        if(DatabaseToggles.isEnableOldDb && DatabaseToggles.isEnableNewDb) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Sqlite.addOwner(owner.getFirstName(), owner.getLastName(), owner.getAddress(), owner.getCity(), owner.getTelephone());
+                    consistencyCheck();
+                }
+            });
+        }
     }
 }

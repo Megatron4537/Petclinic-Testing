@@ -46,7 +46,23 @@ public class VisitStorage {
         return Sqlite.findVisitsByPetId(petId);
     }
 
+    /**
+     * Shadow write Visit to old and new datastore
+     * @param visit
+     */
     public void save(Visit visit) {
+        if(DatabaseToggles.isEnableOldDb) {
+            visitRepository.save(visit);
+        }
 
+        if(DatabaseToggles.isEnableOldDb && DatabaseToggles.isEnableNewDb) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Sqlite.addVisit(visit.getPetId(), visit.getDate(), visit.getDescription());
+                    // consistencyCheck();
+                }
+            });
+        }
     }
 }

@@ -3,6 +3,7 @@ package org.springframework.samples.petclinic.config;
 import org.springframework.core.io.ClassPathResource;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -115,7 +116,7 @@ public class Sqlite{
     /**
      * Inserts Pet into pets table
      */
-    public static void addPet(String name, Date birthDate, int typeId, int ownerId) {
+    public static void addPet(String name, LocalDate birthDate, int typeId, int ownerId) {
         Connection conn = null;
 
         String query = "INSERT INTO pets(name, birth_date, type_id, owner_id) VALUES(?, ?, ?, ?)";
@@ -124,7 +125,7 @@ public class Sqlite{
             conn = DriverManager.getConnection(url);
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setString(1, name);
-            pstmt.setDate(2, birthDate);
+            pstmt.setDate(2, Date.valueOf(birthDate));
             pstmt.setInt(3, typeId);
             pstmt.setInt(4, ownerId);
             pstmt.executeUpdate();
@@ -144,7 +145,7 @@ public class Sqlite{
     /**
      * Inserts Visit into visits table
      */
-    public static void addVisit(int petId, Date visitDate, String description) {
+    public static void addVisit(int petId, LocalDate visitDate, String description) {
         Connection conn = null;
 
         String query = "INSERT INTO visits(pet_id, visit_date, description) VALUES(?, ?, ?)";
@@ -153,7 +154,7 @@ public class Sqlite{
             conn = DriverManager.getConnection(url);
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, petId);
-            pstmt.setDate(2, visitDate);
+            pstmt.setDate(2, Date.valueOf(visitDate));
             pstmt.setString(3, description);
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -257,6 +258,9 @@ public class Sqlite{
     public static List<Visit> findVisitsByPetId(Integer id) {
         return null;
     }
+
+    // get type id from pet type
+    // get owner id from pet owner
 
     /*public static Vets getVets(){
         Connection conn = null;

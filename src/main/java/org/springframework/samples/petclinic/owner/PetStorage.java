@@ -68,7 +68,23 @@ public class PetStorage {
         return Sqlite.findPetById(petId);
     }
 
+    /**
+     * Shadow write Pet to old and new datastore
+     * @param pet
+     */
     public void save(Pet pet) {
+        if(DatabaseToggles.isEnableOldDb) {
+            petRepository.save(pet);
+        }
 
+        if(DatabaseToggles.isEnableOldDb && DatabaseToggles.isEnableNewDb) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Sqlite.addPet(pet.getName(), pet.getBirthDate(), pet.getOwner().getId(), pet.getType().getId());
+                    // consistencyCheck();
+                }
+            });
+        }
     }
 }
