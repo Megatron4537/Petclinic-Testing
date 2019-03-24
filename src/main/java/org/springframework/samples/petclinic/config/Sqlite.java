@@ -85,7 +85,7 @@ public class Sqlite{
     /**
      * Inserts Owner into owners table
      */
-    public static void insertOwner(String firstName, String lastName, String address, String city, String telephone) {
+    public static void addOwner(String firstName, String lastName, String address, String city, String telephone) {
         Connection conn = null;
 
         String query = "INSERT INTO owners(first_name, last_name, address, city, telephone) VALUES(?, ?, ?, ?, ?)";
@@ -115,7 +115,7 @@ public class Sqlite{
     /**
      * Inserts Pet into pets table
      */
-    public static void insertPet(String name, Date birthDate, Integer typeId, Integer ownerId) {
+    public static void addPet(String name, Date birthDate, int typeId, int ownerId) {
         Connection conn = null;
 
         String query = "INSERT INTO pets(name, birth_date, type_id, owner_id) VALUES(?, ?, ?, ?)";
@@ -144,7 +144,7 @@ public class Sqlite{
     /**
      * Inserts Visit into visits table
      */
-    public static void insertVisit(Integer petId, Date visitDate, String description) {
+    public static void addVisit(int petId, Date visitDate, String description) {
         Connection conn = null;
 
         String query = "INSERT INTO visits(pet_id, visit_date, description) VALUES(?, ?, ?)";
