@@ -64,7 +64,7 @@ public class Sqlite{
             conn = DriverManager.getConnection(url);
             Statement state = conn.createStatement();
             ResultSet rs = state.executeQuery(query);
-            
+
             while(rs.next()) {
                 result = rs.getString("last_name");
             }
@@ -80,6 +80,93 @@ public class Sqlite{
             }
         }
         return result;
+    }
+
+    /**
+     * Inserts Owner into owners table
+     */
+    public static void insertOwner(String firstName, String lastName, String address, String city, String telephone) {
+        Connection conn = null;
+
+        String query = "INSERT INTO owners(first_name, last_name, address, city, telephone) VALUES(?, ?, ?, ?, ?)";
+
+        try {
+            conn = DriverManager.getConnection(url);
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, firstName);
+            pstmt.setString(2, lastName);
+            pstmt.setString(3, address);
+            pstmt.setString(4, city);
+            pstmt.setString(5, telephone);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                System.out.println(e);
+            }
+        }
+    }
+
+    /**
+     * Inserts Pet into pets table
+     */
+    public static void insertPet(String name, Date birthDate, Integer typeId, Integer ownerId) {
+        Connection conn = null;
+
+        String query = "INSERT INTO pets(name, birth_date, type_id, owner_id) VALUES(?, ?, ?, ?)";
+
+        try {
+            conn = DriverManager.getConnection(url);
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, name);
+            pstmt.setDate(2, birthDate);
+            pstmt.setInt(3, typeId);
+            pstmt.setInt(4, ownerId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                System.out.println(e);
+            }
+        }
+    }
+
+    /**
+     * Inserts Visit into visits table
+     */
+    public static void insertVisit(Integer petId, Date visitDate, String description) {
+        Connection conn = null;
+
+        String query = "INSERT INTO visits(pet_id, visit_date, description) VALUES(?, ?, ?)";
+
+        try {
+            conn = DriverManager.getConnection(url);
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, petId);
+            pstmt.setDate(2, visitDate);
+            pstmt.setString(3, description);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                System.out.println(e);
+            }
+        }
     }
 
     public static Owner findOwnerById(int ownerId){
