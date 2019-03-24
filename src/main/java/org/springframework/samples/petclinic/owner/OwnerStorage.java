@@ -1,6 +1,7 @@
 package org.springframework.samples.petclinic.owner;
 
 import org.hibernate.dialect.Database;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.config.Sqlite;
 import org.springframework.samples.petclinic.system.DatabaseToggles;
 
@@ -8,11 +9,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import org.springframework.samples.petclinic.model.BaseEntity;
+import org.springframework.stereotype.Repository;
+
 
 public class OwnerStorage {
 
+    @Autowired
     OwnerRepository ownerRepository;
 
+    @Autowired
     public OwnerStorage(OwnerRepository ownerRepository) {
         if(DatabaseToggles.isEnableNewDb) {
             System.out.println("New DB is running");
@@ -27,7 +32,6 @@ public class OwnerStorage {
             System.out.println("System is under test");
         }
     }
-
 
     public Collection<Owner> findByLastName(String lastName) {
         System.out.println("Shadow Read findByLastName");
@@ -72,9 +76,8 @@ public class OwnerStorage {
                 //print it
                 printViolation(owner, actualOwner, expectedOwner);
                 
-                //update if not consistent
-                //TODO: Implement save function 
-                //Sqlite.save(expectedOwner);
+                //update in new datastore if not consistent
+                Sqlite.addOwner(expectedOwner.getFirstName(), expectedOwner.getLastName(), expectedOwner.getAddress(), expectedOwner.getCity(), expectedOwner.getTelephone());
             }
         }
         
@@ -114,6 +117,7 @@ public class OwnerStorage {
      * Shadow write Owner to old and new datastore
      * @param owner
      */
+    @Autowired
     public void save(Owner owner) {
         if(DatabaseToggles.isEnableOldDb) {
             ownerRepository.save(owner);

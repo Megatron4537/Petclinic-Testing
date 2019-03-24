@@ -15,6 +15,7 @@
  */
 package org.springframework.samples.petclinic.owner;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -39,9 +40,13 @@ import java.util.Map;
 class OwnerController {
 
     private static final String VIEWS_OWNER_CREATE_OR_UPDATE_FORM = "owners/createOrUpdateOwnerForm";
+
+    @Autowired
     private final OwnerRepository owners;
+
     private final OwnerStorage ownerStorage;
 
+    @Autowired
     public OwnerController(OwnerRepository clinicService) {
         this.owners = clinicService;
         ownerStorage = new OwnerStorage(clinicService);

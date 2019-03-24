@@ -12,6 +12,9 @@ import org.mockito.Mock;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.samples.petclinic.system.ConsistencyChecker;
 
+import java.util.Collection;
+import java.util.List;
+
 /**
  *
  * @author Daniewl
@@ -45,14 +48,12 @@ public class OwnerStorageTest {
         owner.setTelephone("5145555555");
 
         System.out.print(owner);
+
+        //shadow writes
         storage.save(owner);
         
         //after adding a new owner
-        assertFalse(checker.checkConsistency());//TODO: Add shadow writes so that this will work.
-        
-        checker.updateOwnerConsistencyCheck();
-        
-        assertTrue(checker.checkConsistency());
+        assertEquals(0, storage.consistencyCheck());
 
     }
 }

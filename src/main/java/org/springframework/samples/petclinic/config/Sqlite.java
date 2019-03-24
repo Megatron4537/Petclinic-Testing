@@ -259,9 +259,6 @@ public class Sqlite{
         return null;
     }
 
-    // get type id from pet type
-    // get owner id from pet owner
-
     /*public static Vets getVets(){
         Connection conn = null;
         Vets vets = new Vets();
