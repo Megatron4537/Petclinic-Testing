@@ -115,7 +115,42 @@ public class Sqlite{
         }
         return owner;
     }
+    
+    public static List<Owner> getAllOwners() {
+         Connection conn = null;
+        Owner owner = new Owner();
+        List<Owner> owners = new ArrayList<Owner>();
+        String query = "SELECT * FROM owners";
+        try {
+            conn = DriverManager.getConnection(url);
+            Statement state = conn.createStatement();
+            PreparedStatement pstmt  = conn.prepareStatement(query);
+            ResultSet rs = pstmt.executeQuery();
 
+            while(rs.next()) {
+                owner.setId(rs.getInt("id"));
+                owner.setFirstName(rs.getString("first_name"));
+                owner.setLastName(rs.getString("last_name"));
+                owner.setCity(rs.getString("city"));
+                owner.setAddress(rs.getString("address"));
+                owner.setTelephone(rs.getString("telephone"));
+                owners.add(owner);
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e);
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                System.out.println(e);
+            }
+        }
+        return owners;
+    }
+    
     public static Collection<Owner> findByLastName(String lastName) {
         return null;
     }

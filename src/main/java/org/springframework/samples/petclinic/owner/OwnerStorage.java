@@ -111,7 +111,12 @@ public class OwnerStorage {
     }
 
     public void save(Owner owner) {
-        ownerRepository.save(owner);
+
+        if(DatabaseToggles.isEnableOldDb) {
+            ownerRepository.save(owner);
+        }
+        
+        //add the shadow writes here like if(oldDB) then oldDb.save()...
         
         new Thread(new Runnable() {
             @Override
@@ -119,15 +124,6 @@ public class OwnerStorage {
                 consistencyCheck();
             }
         });
-        //add the shadow writes here like if(oldDB) then oldDb.save()...
-       
+               
     }
-    
-    public List<Owner> getCopyNewDb() {
-        if(DatabaseToggles.isEnableNewDb) {
-            
-        }
-        return null;
-    }
-    
 }
