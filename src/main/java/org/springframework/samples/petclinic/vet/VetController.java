@@ -31,9 +31,11 @@ import java.util.Map;
 class VetController {
 
     private final VetRepository vets;
+    private VetStorage vetStorage;
 
     public VetController(VetRepository clinicService) {
         this.vets = clinicService;
+        this.vetStorage = new VetStorage(clinicService);
     }
 
     @GetMapping("/vets.html")
@@ -41,7 +43,7 @@ class VetController {
         // Here we are returning an object of type 'Vets' rather than a collection of Vet
         // objects so it is simpler for Object-Xml mapping
         Vets vets = new Vets();
-        vets.getVetList().addAll(this.vets.findAll());
+        vets.getVetList().addAll(this.vetStorage.findAll());
         model.put("vets", vets);
         return "vets/vetList";
     }
@@ -51,7 +53,7 @@ class VetController {
         // Here we are returning an object of type 'Vets' rather than a collection of Vet
         // objects so it is simpler for JSon/Object mapping
         Vets vets = new Vets();
-        vets.getVetList().addAll(this.vets.findAll());
+        vets.getVetList().addAll(this.vetStorage.findAll());
         return vets;
     }
 

@@ -38,12 +38,14 @@ class PetController {
     private static final String VIEWS_PETS_CREATE_OR_UPDATE_FORM = "pets/createOrUpdatePetForm";
     private final PetRepository pets;
     private final OwnerRepository owners;
-    private ShadowOwner shadowOwner = new ShadowOwner();
-    //private ConsistencyChecker checker = new ConsistencyChecker();
+    private OwnerStorage ownerStorage;
+    private PetStorage petStorage;
 
     public PetController(PetRepository pets, OwnerRepository owners) {
         this.pets = pets;
         this.owners = owners;
+        this.ownerStorage = new OwnerStorage(owners);
+        this.petStorage = new PetStorage(pets);
     }
 
     @ModelAttribute("types")
@@ -53,8 +55,7 @@ class PetController {
 
     @ModelAttribute("owner")
     public Owner findOwner(@PathVariable("ownerId") int ownerId) {
-        //checker.compareOwners(shadowOwner.findById(ownerId), this.owners.findById(ownerId));
-        return this.owners.findById(ownerId);
+        return this.ownerStorage.findById(ownerId);
     }
 
     @InitBinder("owner")
@@ -92,7 +93,7 @@ class PetController {
 
     @GetMapping("/pets/{petId}/edit")
     public String initUpdateForm(@PathVariable("petId") int petId, ModelMap model) {
-        Pet pet = this.pets.findById(petId);
+        Pet pet = this.petStorage.findById(petId);
         model.put("pet", pet);
         return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
     }
