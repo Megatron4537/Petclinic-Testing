@@ -21,6 +21,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.ui.Model;
 
 import javax.validation.Valid;
 import java.util.Map;
@@ -81,6 +83,25 @@ class VisitController {
             return "pets/createOrUpdateVisitForm";
         } else {
             this.visits.save(visit);
+            return "redirect:/owners/{ownerId}";
+        }
+    }
+
+
+    @GetMapping("/owners/*/pets/{petId}/visits/{visitId}/edit")
+    public String initUpdateVisitForm(@PathVariable("petId") int petId, @PathVariable("visitId") int visitId, Map<String, Object> model) {
+        Visit visit = this.visits.findById(visitId);
+        model.put("visit", visit);
+        return "pets/createOrUpdateVisitForm";
+    }
+
+    @PostMapping("/owners/{ownerId}/pets/{petId}/visits/{visitId}/edit")
+    public String processUpdateVisitForm(@Valid Visit visit, BindingResult result, @PathVariable("visitId") int visitId) {
+        if (result.hasErrors()) {
+            return "pets/createOrUpdateVisitForm";
+        } else {
+            this.visits.deleteById(visitId);
+//            this.visits.save(visit);
             return "redirect:/owners/{ownerId}";
         }
     }
