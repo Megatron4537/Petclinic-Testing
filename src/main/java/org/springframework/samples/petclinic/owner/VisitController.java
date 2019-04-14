@@ -15,6 +15,7 @@
  */
 package org.springframework.samples.petclinic.owner;
 
+import org.springframework.samples.petclinic.features.FeatureToggle;
 import org.springframework.samples.petclinic.visit.Visit;
 import org.springframework.samples.petclinic.visit.VisitRepository;
 import org.springframework.stereotype.Controller;
@@ -39,11 +40,12 @@ class VisitController {
 
     private final VisitRepository visits;
     private final PetRepository pets;
-
+    private FeatureToggle featureToggle;
 
     public VisitController(VisitRepository visits, PetRepository pets) {
         this.visits = visits;
         this.pets = pets;
+        this.featureToggle = new FeatureToggle(visits);
     }
 
     @InitBinder
@@ -90,9 +92,7 @@ class VisitController {
 
     @GetMapping("/owners/*/pets/{petId}/visits/{visitId}/edit")
     public String initUpdateVisitForm(@PathVariable("petId") int petId, @PathVariable("visitId") int visitId, Map<String, Object> model) {
-        Visit visit = this.visits.findById(visitId);
-        model.put("visit", visit);
-        return "pets/createOrUpdateVisitForm";
+        return this.featureToggle.visitFeature(model, visitId);
     }
 
     @PostMapping("/owners/{ownerId}/pets/{petId}/visits/{visitId}/edit")

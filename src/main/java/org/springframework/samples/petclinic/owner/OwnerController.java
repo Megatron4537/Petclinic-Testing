@@ -15,6 +15,7 @@
  */
 package org.springframework.samples.petclinic.owner;
 
+import org.springframework.samples.petclinic.features.FeatureToggle;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -41,7 +42,7 @@ class OwnerController {
     private static final String VIEWS_OWNER_CREATE_OR_UPDATE_FORM = "owners/createOrUpdateOwnerForm";
     private final OwnerRepository owners;
 
-
+    
     public OwnerController(OwnerRepository clinicService) {
         this.owners = clinicService;
     }
@@ -127,6 +128,9 @@ class OwnerController {
     public ModelAndView showOwner(@PathVariable("ownerId") int ownerId) {
         ModelAndView mav = new ModelAndView("owners/ownerDetails");
         mav.addObject(this.owners.findById(ownerId));
+
+        FeatureToggle featureToggle = new FeatureToggle(mav);
+
         return mav;
     }
 

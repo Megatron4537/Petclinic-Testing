@@ -1,34 +1,36 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org"
-  th:replace="~{fragments/layout :: layout (~{::body},'owners')}">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'owners')}">
 
-  <body>
-  
-  
-    <h2>Owner Information</h2>
-  
-  
-    <table class="table table-striped" th:object="${owner}">
-      <tr>
-        <th>Name</th>
-        <td><b th:text="*{firstName + ' ' + lastName}"></b></td>
-      </tr>
-      <tr>
-        <th>Address</th>
-        <td th:text="*{address}" /></td>
-      </tr>
-      <tr>
-        <th>City</th>
-        <td th:text="*{city}" /></td>
-      </tr>
-      <tr>
-        <th>Telephone</th>
-        <td th:text="*{telephone}" /></td>
-      </tr>
-    </table>
-  
-    <a th:href="@{{id}/edit(id=${owner.id})}" class="btn btn-default">Edit
+<body>
+
+
+  <h2>Owner Information</h2>
+
+
+  <table class="table table-striped" th:object="${owner}">
+    <tr>
+      <th>Name</th>
+      <td><b th:text="*{firstName + ' ' + lastName}"></b></td>
+    </tr>
+    <tr>
+      <th>Address</th>
+      <td th:text="*{address}" />
+      </td>
+    </tr>
+    <tr>
+      <th>City</th>
+      <td th:text="*{city}" />
+      </td>
+    </tr>
+    <tr>
+      <th>Telephone</th>
+      <td th:text="*{telephone}" />
+      </td>
+    </tr>
+  </table>
+
+  <a th:href="@{{id}/edit(id=${owner.id})}" class="btn btn-default">Edit
       Owner</a>
     <a th:href="@{{id}/pets/new(id=${owner.id})}" class="btn btn-default">Add
       New Pet</a>
@@ -63,9 +65,8 @@
             <tr th:each="visit : ${pet.visits}">
               <td th:text="${#temporals.format(visit.date, 'yyyy-MM-dd')}"></td>
               <td th:text="${visit?.description}"></td>
-              <td><a th:href="@{{ownerId}/pets/{petId}/visits/{visitId}/edit
-              (ownerId=${owner.id},petId=${pet.id}, visitId=${visit.id})}">
-                  Edit Visit</a></td>
+              <td th:if="${featureA}"><a th:href="@{{ownerId}/pets/{petId}/visits/{visitId}/edit(ownerId=${owner.id},petId=${pet.id}, visitId=${visit.id})}">Cancel Visit</a></td>
+              <td th:if="${featureB}"><a th:href="@{{ownerId}/pets/{petId}/visits/{visitId}/edit(ownerId=${owner.id},petId=${pet.id}, visitId=${visit.id})}">Edit Visit</a></td>
             </tr>
             <tr>
               <td><a
