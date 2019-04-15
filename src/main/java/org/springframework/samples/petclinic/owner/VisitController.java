@@ -107,7 +107,7 @@ class VisitController {
             return "pets/createOrUpdateVisitForm";
         } else {
             this.visits.deleteById(visitId);
-//            this.visits.save(visit);
+            this.visits.save(visit);
             return "redirect:/owners/{ownerId}";
         }
     }
