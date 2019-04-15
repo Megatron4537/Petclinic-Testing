@@ -88,13 +88,19 @@ class VisitController {
             return "redirect:/owners/{ownerId}";
         }
     }
-
+    
+   
+    @DeleteMapping("/owners/{ownerId}/pets/{petId}/visits/{visitId}/delete")
+    public String initDeleteVisit(@PathVariable("petId") int petId, @PathVariable("visitId") int visitId,@PathVariable("ownerId") int ownerId, Map<String, Object> model) {
+        this.featureToggle.visitFeatureA(model, visitId);
+        return "redirect:/owners/{ownerId}";
+    }
 
     @GetMapping("/owners/*/pets/{petId}/visits/{visitId}/edit")
     public String initUpdateVisitForm(@PathVariable("petId") int petId, @PathVariable("visitId") int visitId, Map<String, Object> model) {
-        return this.featureToggle.visitFeature(model, visitId);
+        return this.featureToggle.visitFeatureB(model, visitId);
     }
-
+    
     @PostMapping("/owners/{ownerId}/pets/{petId}/visits/{visitId}/edit")
     public String processUpdateVisitForm(@Valid Visit visit, BindingResult result, @PathVariable("visitId") int visitId) {
         if (result.hasErrors()) {
@@ -105,5 +111,4 @@ class VisitController {
             return "redirect:/owners/{ownerId}";
         }
     }
-
 }

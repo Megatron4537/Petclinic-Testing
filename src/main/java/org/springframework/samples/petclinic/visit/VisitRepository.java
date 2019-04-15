@@ -49,7 +49,10 @@ public interface VisitRepository extends Repository<Visit, Integer> {
     @Transactional
     void deleteById(@Param("id") Integer id);
 
-    List<Visit> findByPetId(Integer petId);
+    @Transactional
+    void delete(Visit visit);
+
+    List<Visit> findByPetId(Integer petId);  
 
     Visit findById(Integer visitId);
     

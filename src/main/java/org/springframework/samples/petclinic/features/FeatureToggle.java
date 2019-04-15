@@ -71,21 +71,25 @@ public class FeatureToggle {
         return this.featureB;
     }
 
-    public String visitFeature(Map<String,Object> model, int visitId){
+    public String visitFeatureA(Map<String,Object> model, int visitId){
 
         if(this.isFeatureAEnabled()){
             logger.info("Feature A",model,visitId);
-
-            // this.visits.cancel(visitId)
-            return "redirect:/owners";
-        }
-        else if(this.isFeatureBEnabled()){
+            Visit visit = this.visits.findById(visitId);
+            this.visits.delete(visit);
+        } 
+        return "";
+    }
+    
+    public String visitFeatureB(Map<String,Object> model, int visitId){
+    
+        if(this.isFeatureBEnabled()){
             logger.info("Feature B",model,visitId);
 
             Visit visit = this.visits.findById(visitId);
-            model.put("visit", visit);
+            model.put("visit", visit);  
             return "pets/createOrUpdateVisitForm";
-        }
-        else return "error";
+            
+        } else return "error";
     }
 }
