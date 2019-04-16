@@ -15,8 +15,8 @@ public class FeatureToggle {
     private VisitRepository visits;
 
     // features disabled by default
-    private boolean featureA = false;
-    private boolean featureB = false;
+    public static boolean featureA = false;
+    public static boolean featureB = false;
 
     private static final Logger logger = LogManager.getLogger("FeatureToggle");
 
@@ -77,8 +77,8 @@ public class FeatureToggle {
             logger.info("Feature A",model,visitId);
             Visit visit = this.visits.findById(visitId);
             this.visits.delete(visit);
-        } 
-        return "";
+            return "";
+        } else return "error";
     }
     
     public String visitFeatureB(Map<String,Object> model, int visitId){
