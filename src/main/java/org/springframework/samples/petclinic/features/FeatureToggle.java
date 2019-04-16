@@ -1,5 +1,6 @@
 package org.springframework.samples.petclinic.features;
 
+import org.apache.logging.log4j.message.ObjectArrayMessage;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.samples.petclinic.visit.VisitRepository;
 import org.springframework.samples.petclinic.visit.Visit;
@@ -74,7 +75,7 @@ public class FeatureToggle {
     public String visitFeatureA(Map<String,Object> model, int visitId){
 
         if(this.isFeatureAEnabled()){
-            logger.info("Feature A",model,visitId);
+            logger.info(String.format("A, %d",visitId));
             Visit visit = this.visits.findById(visitId);
             this.visits.delete(visit);
             return "";
@@ -84,7 +85,7 @@ public class FeatureToggle {
     public String visitFeatureB(Map<String,Object> model, int visitId){
     
         if(this.isFeatureBEnabled()){
-            logger.info("Feature B",model,visitId);
+            logger.info(String.format("B, %d",visitId));
 
             Visit visit = this.visits.findById(visitId);
             model.put("visit", visit);  

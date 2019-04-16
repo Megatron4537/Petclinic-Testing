@@ -15,7 +15,7 @@
             </Policies>
             <DefaultRolloverStrategy max="200" />
         </RollingFile>
-        <File name="featuretoggle" fileName="logs/FeatureToggle.log">
+        <File name="featuretoggle" fileName="logs/FeatureToggle.csv">
             <PatternLayout>
                 <Pattern>%d, %m%n</Pattern>
             </PatternLayout>
@@ -23,7 +23,6 @@
     </Appenders>
     <Loggers>
         <Root level="info" additivity="false">
-            <AppenderRef ref="csvFile" level="info"/>
         </Root>
         <Logger name = "FeatureToggle" level = "info" additivity = "false">
             <AppenderRef ref= "featuretoggle"/>
