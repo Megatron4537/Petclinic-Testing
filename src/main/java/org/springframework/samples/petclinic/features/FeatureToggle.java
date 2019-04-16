@@ -18,7 +18,7 @@ public class FeatureToggle {
     private boolean featureA = false;
     private boolean featureB = false;
 
-    private static final Logger logger = LogManager.getLogger("FEATURE TOGGLE");
+    private static final Logger logger = LogManager.getLogger("FeatureToggle");
 
     public FeatureToggle(VisitRepository visits){
 
