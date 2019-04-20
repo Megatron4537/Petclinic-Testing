@@ -8,6 +8,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,8 +17,8 @@ public class FeatureToggle {
     private VisitRepository visits;
 
     // features disabled by default
-    public static boolean featureA = false;
-    public static boolean featureB = false;
+    private static boolean featureA = false;
+    private static boolean featureB = false;
 
     private static final Logger logger = LogManager.getLogger("FeatureToggle");
 
@@ -25,14 +26,16 @@ public class FeatureToggle {
 
         this.visits = visits;
 
-        Properties prop = new Properties();
         try {
-            //load a properties file from class path, inside static method
-            prop.load(FeatureToggle.class.getClassLoader().getResourceAsStream("application.properties"));
+            // if toggle was already set, dont check config file for enabled features
+                //load a properties file from class path, inside static method
+                Properties prop = new Properties();
+                prop.load(FeatureToggle.class.getClassLoader().getResourceAsStream("application.properties"));
 
-          if(prop.getProperty("featureB").equals("true")) this.featureB = true;
+//                if (prop.getProperty("featureB").equals("true")) this.setFeatureB(true);
+//
+//                if (prop.getProperty("featureA").equals("true"))this.setFeatureA(true);
 
-          if(prop.getProperty("featureA").equals("true")) this.featureA = true;
 
         }
         catch (IOException ex) {
@@ -45,19 +48,27 @@ public class FeatureToggle {
      */
     public FeatureToggle(ModelAndView mav){
 
-        Properties prop = new Properties();
         try {
-            //load a properties file from class path, inside static method
-            prop.load(FeatureToggle.class.getClassLoader().getResourceAsStream("application.properties"));
+            // if toggle was already set, dont check config file for enabled features
 
-            if(prop.getProperty("featureA").equals("true")) {
-                this.featureA = true;
-                mav.addObject("featureA",true);
-            }
-            if(prop.getProperty("featureB").equals("true")) {
-                this.featureB = true;
-                mav.addObject("featureB",true);
-            }
+//                //load a properties file from class path, inside static method
+                Properties prop = new Properties();
+                prop.load(FeatureToggle.class.getClassLoader().getResourceAsStream("application.properties"));
+//
+//                if (prop.getProperty("featureA").equals("true")) {
+//                    this.setFeatureA(true);
+//                }
+//                if (prop.getProperty("featureB").equals("true")) {
+//                    this.setFeatureA(false);
+//                }
+
+            boolean feature = ThreadLocalRandom.current().nextBoolean();
+            this.setFeatureB(!feature);
+            this.setFeatureA(feature);
+
+            mav.addObject("featureA", featureA);
+            mav.addObject("featureB", featureB);
+
         }
         catch (IOException ex) {
             ex.printStackTrace();
@@ -70,6 +81,14 @@ public class FeatureToggle {
 
     public boolean isFeatureBEnabled(){
         return this.featureB;
+    }
+
+    public static void setFeatureA(boolean on){
+        featureA = on;
+    }
+
+    public static void setFeatureB(boolean on) {
+        featureB = on;
     }
 
     public String visitFeatureA(Map<String,Object> model, int visitId){
